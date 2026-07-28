@@ -1,0 +1,28 @@
+# Read the Bronze Delta table
+bronze_weather_df = spark.table(
+    "workspace.default.bronze_weather_hourly"
+)
+
+display(bronze_weather_df)
+
+# Check for missing values in each column
+from pyspark.sql.functions import col, sum
+
+display(
+    bronze_weather_df.select(
+        [
+            sum(col(column).isNull().cast("int")).alias(column)
+            for column in bronze_weather_df.columns
+        ]
+    )
+)
+
+# Check for duplicate timestamps
+duplicate_dates_df = (
+    bronze_weather_df
+    .groupBy("date")
+    .count()
+    .filter("count > 1")
+)
+
+display(duplicate_dates_df)
