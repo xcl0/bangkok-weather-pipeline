@@ -43,3 +43,6 @@ display(
         describe detail workspace.default.bronze_weather_hourly
     """)
 )
+
+# Print the Bronze DataFrame schema to verify column names, data types, and nullability
+bronze_weather_df.printSchema()
