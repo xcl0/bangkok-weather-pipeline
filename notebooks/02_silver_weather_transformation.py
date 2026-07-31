@@ -1,4 +1,12 @@
-from pyspark.sql.functions import col, sum, min, max, to_date, hour
+from pyspark.sql.functions import (
+    col,
+    sum,
+    min,
+    max,
+    to_date,
+    hour,
+    from_utc_timestamp
+)
 
 # Read the Bronze Delta table
 bronze_weather_df = spark.table(
@@ -37,7 +45,7 @@ temperature_range_df = bronze_weather_df.select(
 
 display(temperature_range_df)
 
-# Clean and standardize the Bronze data
+# Clean, standardize, and convert timestamps to Bangkok time
 silver_weather_df = (
     bronze_weather_df
     .filter(col("date").isNotNull())
@@ -49,19 +57,26 @@ silver_weather_df = (
     )
     .withColumnRenamed(
         "date",
-        "weather_timestamp"
+        "weather_timestamp_utc"
     )
     .withColumnRenamed(
         "temperature_2m",
         "temperature_celsius"
     )
     .withColumn(
+        "weather_timestamp",
+        from_utc_timestamp(
+            col("weather_timestamp_utc"),
+            "Asia/Bangkok"
+        )
+    )
+    .withColumn(
         "weather_date",
-        to_date("weather_timestamp")
+        to_date(col("weather_timestamp"))
     )
     .withColumn(
         "weather_hour",
-        hour("weather_timestamp")
+        hour(col("weather_timestamp"))
     )
 )
 
@@ -75,11 +90,14 @@ silver_weather_df.printSchema()
 print("Bronze rows:", bronze_weather_df.count())
 print("Silver rows:", silver_weather_df.count())
 
-# Save the Silver Delta table
-silver_weather_df.write \
-    .format("delta") \
-    .mode("overwrite") \
+# Save the corrected Silver Delta table
+(
+    silver_weather_df.write
+    .format("delta")
+    .mode("overwrite")
+    .option("overwriteSchema", "true")
     .saveAsTable("workspace.default.silver_weather_hourly")
+)
 
 # Read and verify the saved Silver table
 saved_silver_weather_df = spark.table(
@@ -94,6 +112,6 @@ saved_silver_weather_df.printSchema()
 
 display(
     spark.sql("""
-        describe detail workspace.default.silver_weather_hourly
+        DESCRIBE DETAIL workspace.default.silver_weather_hourly
     """)
 )
