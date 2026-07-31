@@ -1,5 +1,5 @@
 -- Databricks notebook source
- -- Create the daily Gold table
+-- Create the daily Gold table
 CREATE OR REPLACE TABLE workspace.default.gold_weather_daily
 USING DELTA
 AS
