@@ -38,7 +38,6 @@ Databricks AI/BI Dashboard
 * Databricks
 * Delta Lake
 * Open-Meteo API
-* GitHub
 
 ## Pipeline Layers
 
