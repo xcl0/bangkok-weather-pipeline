@@ -47,7 +47,7 @@ Silver Delta Table
 Gold Daily Table
       ↓
 Databricks AI/BI Dashboard
-````
+```
 
 ## Tech Stack
 
