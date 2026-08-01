@@ -202,6 +202,4 @@ Weather data is provided by the Open-Meteo API.
 
 The project requests hourly temperature data for Bangkok using the `Asia/Bangkok` timezone.
 
-```
-```
 
