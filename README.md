@@ -16,6 +16,25 @@ The final Gold table is used to power a Databricks AI/BI dashboard for daily tem
 - Prepare the pipeline for scheduled automation
 - Apply practical data engineering and data-quality techniques
 
+## Repository Structure
+
+```text
+bangkok-weather-pipeline/
+├── notebooks/
+│   ├── 00_bronze_open_meteo_ingestion.py
+│   ├── 01_silver_weather_transformation.py
+│   ├── 02_gold_weather_daily_aggregation.sql
+│   └── 03_gold_validation_and_analysis.sql
+├── dashboard/
+│   ├── bangkok_weather_dashboard.lvdash.json
+│   ├── daily_average_temperature.png
+│   ├── daily_min_avg_max_temperature.png
+│   └── daily_temperature_range.png
+├── .gitignore
+├── LICENSE
+└── README.md
+```
+
 ## Architecture
 
 ```text
