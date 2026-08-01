@@ -1,14 +1,32 @@
 # Bangkok Weather Pipeline
 
-An end-to-end data engineering project that extracts Bangkok weather data from the Open-Meteo API and builds a complete data pipeline using Python, Pandas, and SQL.
+An end-to-end data engineering project that ingests hourly Bangkok weather data from the Open-Meteo API and processes it through Bronze, Silver, and Gold layers using Python, PySpark, SQL, Delta Lake, and Databricks.
+
+The final Gold table is used to power a Databricks AI/BI dashboard for daily temperature analysis.
 
 ## Project Goals
 
-- Learn API-based data extraction
-- Build a Bronze/Silver/Gold pipeline
-- Load data into SQL
-- Automate the pipeline
-- Apply real-world data engineering practices
+- Extract weather data from a public API
+- Build a Bronze, Silver, and Gold data pipeline
+- Store data in Delta tables
+- Transform and validate data with PySpark
+- Aggregate reporting metrics with SQL
+- Build an interactive Databricks dashboard
+- Prepare the pipeline for scheduled automation
+- Apply practical data engineering and data-quality techniques
+
+## Architecture
+
+```text
+Open-Meteo API
+      ↓
+Bronze Delta Table
+      ↓
+Silver Delta Table
+      ↓
+Gold Daily Table
+      ↓
+Databricks AI/BI Dashboard
 
 ## Dashboard
 
