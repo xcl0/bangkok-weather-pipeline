@@ -1,0 +1,323 @@
+{
+  "datasets": [
+    {
+      "name": "8013ba9e",
+      "displayName": "daily_temperature",
+      "queryLines": [
+        "--Daily Average Temperature\r\n",
+        "SELECT\r\n",
+        "    weather_date,\r\n",
+        "    avg_temperature_celsius\r\n",
+        "FROM workspace.default.gold_weather_daily\r\n",
+        "ORDER BY weather_date;"
+      ]
+    },
+    {
+      "name": "336d9b32",
+      "displayName": "daily_temperature_summary",
+      "queryLines": [
+        "-- Compare daily minimum, average, and maximum temperatures\r\n",
+        "SELECT\r\n",
+        "    weather_date,\r\n",
+        "    min_temperature_celsius,\r\n",
+        "    avg_temperature_celsius,\r\n",
+        "    max_temperature_celsius\r\n",
+        "FROM workspace.default.gold_weather_daily\r\n",
+        "ORDER BY weather_date;"
+      ]
+    },
+    {
+      "name": "c053f08e",
+      "displayName": "daily_temperature_range",
+      "queryLines": [
+        "-- Show the daily difference between maximum and minimum temperature\r\n",
+        "SELECT\r\n",
+        "    weather_date,\r\n",
+        "    temperature_range_celsius\r\n",
+        "FROM workspace.default.gold_weather_daily\r\n",
+        "ORDER BY weather_date;"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "e5a1ccc5",
+      "displayName": "Weather Overview",
+      "layout": [
+        {
+          "widget": {
+            "name": "daily-average",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "8013ba9e",
+                  "fields": [
+                    {
+                      "name": "weather_date",
+                      "expression": "`weather_date`"
+                    },
+                    {
+                      "name": "avg_temperature_celsius",
+                      "expression": "`avg_temperature_celsius`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Daily Average Temperature",
+                "showDescription": false
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "weather_date",
+                  "axis": {
+                    "title": "Date"
+                  },
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "avg_temperature_celsius",
+                  "axis": {
+                    "title": "Average Temperature (°C)"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 0,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "daily-minimum-average-maximum-temperature",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "336d9b32",
+                  "fields": [
+                    {
+                      "name": "weather_date",
+                      "expression": "`weather_date`"
+                    },
+                    {
+                      "name": "max_temperature_celsius",
+                      "expression": "`max_temperature_celsius`"
+                    },
+                    {
+                      "name": "min_temperature_celsius",
+                      "expression": "`min_temperature_celsius`"
+                    },
+                    {
+                      "name": "avg_temperature_celsius",
+                      "expression": "`avg_temperature_celsius`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Daily Minimum, Average, and Maximum Temperature"
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 1
+                  }
+                ]
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "weather_date",
+                  "axis": {
+                    "title": "Date"
+                  },
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fields": [
+                    {
+                      "fieldName": "max_temperature_celsius",
+                      "displayName": "Maximum Temperature (°C)"
+                    },
+                    {
+                      "fieldName": "min_temperature_celsius",
+                      "displayName": "Minimum Temperature (°C)"
+                    },
+                    {
+                      "fieldName": "avg_temperature_celsius",
+                      "displayName": "Average Temperature (°C)"
+                    }
+                  ],
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "axis": {
+                    "title": "Temperature (°C)"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 6,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "daily-1",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "c053f08e",
+                  "fields": [
+                    {
+                      "name": "weather_date",
+                      "expression": "`weather_date`"
+                    },
+                    {
+                      "name": "temperature_range_celsius",
+                      "expression": "`temperature_range_celsius`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Daily Temperature Range"
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "weather_date",
+                  "axis": {
+                    "title": "Date"
+                  },
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "temperature_range_celsius",
+                  "axis": {
+                    "title": "Temperature Range"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 12,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
