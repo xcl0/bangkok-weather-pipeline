@@ -3,7 +3,7 @@
 
 An end-to-end data engineering project that ingests hourly Bangkok weather data from the Open-Meteo API and processes it through Bronze, Silver, and Gold layers using Python, PySpark, SQL, Delta Lake, and Databricks.
 
-The final Gold table is used to power a Databricks AI/BI dashboard for daily temperature analysis.
+The pipeline automatically refreshes every day using Databricks Jobs. Fresh weather data is ingested directly from the Open-Meteo API, processed through the Medallion architecture, and visualized in a Databricks AI/BI dashboard.
 
 ## Project Goals
 
@@ -12,8 +12,8 @@ The final Gold table is used to power a Databricks AI/BI dashboard for daily tem
 - Store data in Delta tables
 - Transform and validate data with PySpark
 - Aggregate reporting metrics with SQL
-- Build an interactive Databricks dashboard
-- Prepare the pipeline for scheduled automation
+- Build an interactive Databricks AI/BI dashboard
+- Automate the pipeline using Databricks Jobs
 - Apply practical data engineering and data-quality techniques
 
 ## Repository Structure
@@ -24,12 +24,14 @@ bangkok-weather-pipeline/
 │   ├── 00_bronze_open_meteo_ingestion.py
 │   ├── 01_silver_weather_transformation.py
 │   ├── 02_gold_weather_daily_aggregation.sql
-│   └── 03_data_quality_validation.sql
+│   └── 03_reporting_queries.sql
 ├── dashboard/
 │   ├── bangkok_weather_dashboard.lvdash.json
 │   ├── daily_average_temperature.png
 │   ├── daily_min_avg_max_temperature.png
 │   └── daily_temperature_range.png
+├── docs/
+│   └── databricks_job_workflow.png
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -38,15 +40,17 @@ bangkok-weather-pipeline/
 ## Architecture
 
 ```text
-Open-Meteo API
-      ↓
-Bronze Delta Table
-      ↓
-Silver Delta Table
-      ↓
-Gold Daily Table
-      ↓
-Databricks AI/BI Dashboard
+Databricks Scheduled Job (Daily 09:00 AM Asia/Bangkok)
+                    ↓
+              Open-Meteo API
+                    ↓
+             Bronze Delta Table
+                    ↓
+             Silver Delta Table
+                    ↓
+              Gold Delta Table
+                    ↓
+        Databricks AI/BI Dashboard
 ```
 
 ## Tech Stack
@@ -63,6 +67,8 @@ Databricks AI/BI Dashboard
 ### Bronze Layer
 
 The Bronze notebook calls the Open-Meteo API directly from Databricks and retrieves hourly Bangkok temperature data.
+
+The notebook calculates the request dates dynamically at runtime, retrieving a rolling seven-day weather forecast. The pipeline currently overwrites the Bronze table on each scheduled run so that it always contains the latest forecast window.
 
 The API response is converted into a Spark DataFrame and stored in:
 
@@ -169,26 +175,69 @@ dashboard/bangkok_weather_dashboard.lvdash.json
 
 The JSON file can be imported back into Databricks to recreate the dashboard configuration.
 
-## Notebook Workflow
+## Pipeline Automation
 
-Run the notebooks in this order:
+The pipeline is orchestrated using **Databricks Jobs**.
+
+A scheduled workflow runs automatically every day at **09:00 (Asia/Bangkok)**.
+
+Execution order:
+
+```text
+bronze_ingestion
+        ↓
+silver_transformation
+        ↓
+gold_daily_aggregation
+```
+
+The Bronze notebook requests fresh weather data from the Open-Meteo API using dynamically generated dates.
+
+Each scheduled execution refreshes the Bronze, Silver, and Gold Delta tables automatically.
+
+The Databricks Job workflow is shown below.
+
+![Databricks Job Workflow](docs/databricks_job_workflow.png)
+
+## Pipeline Workflow
+
+During development the notebooks can be executed manually in the following order:
 
 ```text
 00_bronze_open_meteo_ingestion
-      ↓
+        ↓
 01_silver_weather_transformation
-      ↓
+        ↓
 02_gold_weather_daily_aggregation
-      ↓
-03_data_quality_validation
-      ↓
-Databricks dashboard refresh
+        ↓
+03_reporting_queries
 ```
+
+In production the same workflow is executed automatically every day by a Databricks Job.
+
+## Current Design
+
+The pipeline maintains a rolling seven-day **hourly temperature forecast** for Bangkok.
+
+Each scheduled execution retrieves the latest temperature forecast from the Open-Meteo API and overwrites the Bronze, Silver, and Gold tables with the refreshed seven-day window.
+
+The current design does not preserve historical forecast snapshots or completed temperature observations.
+
+Future versions may use Delta `MERGE` and incremental ingestion to retain historical records and track how forecasts change over time.
 
 ## Data Source
 
 Weather data is provided by the Open-Meteo API.
 
 The project requests hourly temperature data for Bangkok using the `Asia/Bangkok` timezone.
+
+## Future Improvements
+
+- Preserve historical weather records instead of overwriting Bronze
+- Implement Delta MERGE for incremental ingestion
+- Separate historical observations from forecast data
+- Add precipitation, humidity, wind speed, and weather-condition fields
+- Add automated job failure notifications and monitoring
+- Expand the dashboard with filters and longer-term trend analysis
 
 
