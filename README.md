@@ -185,17 +185,6 @@ Run the notebooks in this order:
 Databricks dashboard refresh
 ```
 
-## Future Improvements
-
-* replace fixed request dates with dynamic date parameters
-* preserve historical records instead of overwriting Bronze
-* use Delta `MERGE` for incremental ingestion
-* schedule the notebooks as a Databricks Job
-* add failure notifications and retry monitoring
-* separate completed historical observations from changing forecast data
-* expand the API request with precipitation, humidity, wind, and weather-condition fields
-* add dashboard date filters and longer-term trend analysis
-
 ## Data Source
 
 Weather data is provided by the Open-Meteo API.
