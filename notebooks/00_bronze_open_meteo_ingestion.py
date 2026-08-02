@@ -160,8 +160,11 @@ bronze_weather_df.printSchema()
 
 # Save the DataFrame as a managed Bronze Delta table
 #
-# overwrite is appropriate for this fixed historical rebuild.
-# Later, automation may use append or MERGE instead.
+# Overwrite is appropriate for the current rolling seven-day
+# forecast design. Each run replaces the previous forecast window
+# with the latest data returned by Open-Meteo.
+#
+# A future historical design could use append or Delta MERGE.
 (
     bronze_weather_df.write
     .format("delta")
