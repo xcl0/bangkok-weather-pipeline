@@ -24,7 +24,7 @@ bangkok-weather-pipeline/
 │   ├── 00_bronze_open_meteo_ingestion.py
 │   ├── 01_silver_weather_transformation.py
 │   ├── 02_gold_weather_daily_aggregation.sql
-│   └── 03_gold_validation_and_analysis.sql
+│   └── 03_data_quality_validation.sql
 ├── dashboard/
 │   ├── bangkok_weather_dashboard.lvdash.json
 │   ├── daily_average_temperature.png
@@ -180,7 +180,7 @@ Run the notebooks in this order:
       ↓
 02_gold_weather_daily_aggregation
       ↓
-03_gold_validation_and_analysis
+03_data_quality_validation
       ↓
 Databricks dashboard refresh
 ```
