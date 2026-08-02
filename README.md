@@ -195,7 +195,7 @@ The Bronze notebook requests fresh weather data from the Open-Meteo API using dy
 
 Each scheduled execution refreshes the Bronze, Silver, and Gold Delta tables automatically.
 
-The Databricks Job workflow is shown below.
+The Databricks Job workflow:
 
 ![Databricks Job Workflow](docs/databricks_job_workflow.png)
 
