@@ -1,4 +1,8 @@
 # Databricks notebook source
+
+# Import date tools for dynamic API dates
+from datetime import date, timedelta
+
 # Import the time module so the notebook can pause between retry attempts
 import time
 
@@ -8,6 +12,11 @@ import requests
 
 # Open-Meteo forecast API endpoint
 url = "https://api.open-meteo.com/v1/forecast"
+
+
+# Calculate the date range at runtime
+start_date = date.today()
+end_date = start_date + timedelta(days=6)
 
 
 # Define the request parameters
@@ -25,10 +34,10 @@ params = {
     "timezone": "Asia/Bangkok",
 
     # First date included in the request
-    "start_date": "2026-07-27",
+    "start_date": start_date.isoformat(),
 
     # Last date included in the request
-    "end_date": "2026-08-03"
+    "end_date": end_date.isoformat()
 }
 
 
@@ -182,3 +191,4 @@ display(
 print(
     "Bronze rows:",
     saved_bronze_weather_df.count()
+)
